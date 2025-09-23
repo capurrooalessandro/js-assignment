@@ -1,0 +1,268 @@
+/* =========================
+   Design tokens (colors)
+   ========================= */
+:root {
+    --bg-body: #fcfcfc;
+    --text-light: #F9FAF8;
+    --text-dark: #1F2937;
+
+    --btn-primary: #0d6efd;
+    --btn-primary-hover: #0b5ed7;
+    --btn-primary-active: #0a58ca;
+
+    --btn-secondary: #6c757d;
+    --btn-secondary-hover: #5c636a;
+    --btn-secondary-active: #565e64;
+
+    --btn-danger: #dc3545;
+    --btn-danger-hover: #bb2d3b;
+    --btn-danger-active: #b02a37;
+
+    --bg-secondary-400: #ced4da;
+    --bg-screen: #c7ffa4;
+
+    --keyboard-navigation: #777cff;
+}
+
+/* Tiny screens hard cap to avoid overflow */
+@media (max-width: 270px) {
+    html {
+        max-width: 270px;
+        min-width: 260px;
+        resize: none;
+    }
+}
+
+/* =========================
+   Base & utilities
+   ========================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-body);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text-dark);
+}
+
+header, footer {
+    text-align: center;
+}
+
+header {
+    padding-top: 24px;
+}
+
+footer {
+    padding-bottom: 24px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(20px, 2vw + 1rem, 32px);
+}
+
+/* Screen-reader only helper */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* =========================
+   Calculator layout
+   ========================= */
+.calculator-inner {
+    min-height: 94vh;
+    display: flex;
+    align-items: center;
+}
+
+/* Calculator shell */
+.container {
+    width: min(90vw, 18rem);
+    margin-inline: auto;
+    padding: 16px 16px 24px;
+    border: 3px solid var(--btn-secondary);
+    background: var(--bg-secondary-400);
+    border-radius: 14px;
+}
+
+/* Display (use with <input type="text" readonly> or <output>) */
+.calc-display {
+    display: block;
+    width: 240px;
+    height: 50px;
+    padding: 10px 9px;
+    font-size: clamp(18px, 1.2rem + 0.2vw, 20px);
+    background: var(--bg-screen);
+    border: 1px solid var(--btn-secondary);
+    border-radius: 12px;
+    text-align: end;
+    /* remove number spinners if someone keeps type="number" */
+    appearance: textfield;
+    caret-color: transparent;
+}
+
+.calc-display:focus-visible {
+    outline: 2px solid var(--keyboard-navigation);
+    outline-offset: 2px;
+}
+
+/* Keys stack: rows */
+.calc-keys {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    align-items: center;
+}
+
+/* A single row of keys */
+.calc-grid {
+    display: flex;
+    gap: 6px;
+}
+
+/* Buttons */
+.key {
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--btn-primary);
+    color: var(--text-light);
+    background: var(--btn-primary);
+    font-size: 20px;
+    width: 50px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .12s ease, border-color .12s ease, transform .06s ease;
+}
+
+.key:hover {
+    background-color: var(--btn-primary-hover);
+    border-color: var(--btn-primary-hover);
+}
+
+.key:active {
+    background-color: var(--btn-primary-active);
+    border-color: var(--btn-primary-active);
+    transform: translateY(1px);
+}
+
+.key:focus-visible {
+    outline: 2px solid var(--keyboard-navigation);
+    outline-offset: 2px;
+}
+
+/* Functional & operator variants */
+.key--op, .key--func {
+    color: var(--text-light);
+}
+
+/* AC (danger) */
+.key--func[data-action="clear"] {
+    background: var(--btn-danger);
+    border-color: var(--btn-danger);
+}
+
+.key--func[data-action="clear"]:hover {
+    background: var(--btn-danger-hover);
+    border-color: var(--btn-danger-hover);
+}
+
+.key--func[data-action="clear"]:active {
+    background: var(--btn-danger-active);
+    border-color: var(--btn-danger-active);
+}
+
+/* Backspace & Equals (secondary) */
+.key--func[data-action="backspace"], .key--equals[data-action="equals"] {
+    background: var(--btn-secondary);
+    border-color: var(--btn-secondary);
+}
+
+.key--func[data-action="backspace"]:hover, .key--equals[data-action="equals"]:hover {
+    background: var(--btn-secondary-hover);
+    border-color: var(--btn-secondary-hover);
+}
+
+.key--func[data-action="backspace"]:active, .key--equals[data-action="equals"]:active {
+    background: var(--btn-secondary-active);
+    border-color: var(--btn-secondary-active);
+}
+
+/* 0 spans two slots: (2 * 50px buttons) + one 6px gap */
+.key--zero {
+    width: calc(50px * 2 + 6px);
+}
+
+.key--func[data-action="clear"], .key--func[data-action="backspace"] {
+    width: calc(35px * 2 + 9px);
+}
+
+/* Tiny devices: keep everything usable */
+@media (max-width: 380px) {
+    .container {
+        width: min(94vw, 16rem);
+        padding: 12px 6px 24px;
+    }
+
+    .key {
+        width: 44px;
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .calc-display {
+        width: 210px;
+        font-size: clamp(18px, 1.18rem + 0.2vw, 20px);
+    }
+
+    .key--zero {
+        width: calc(44px * 2 + 6px);
+    }
+
+    .key--func[data-action="clear"], .key--func[data-action="backspace"] {
+        width: calc(30px * 2 + 9px);
+    }
+}
+
+.display-wrap {
+    position: relative;
+}
+
+.display-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 1.2em;
+    background: var(--text-dark);
+    animation: cursor-blink .8s steps(2, end) infinite;
+    pointer-events: none;
+}
+
+@keyframes cursor-blink {
+    0%, 50% {
+        opacity: 1;
+    }
+
+    50.01%, 100% {
+        opacity: 0;
+    }
+}
