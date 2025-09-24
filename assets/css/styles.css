@@ -101,7 +101,7 @@ h1 {
     display: block;
     width: 240px;
     height: 50px;
-    padding: 10px 9px;
+    padding: 10px 12px;
     font-size: clamp(18px, 1.2rem + 0.2vw, 20px);
     background: var(--bg-screen);
     border: 1px solid var(--btn-secondary);
@@ -223,7 +223,7 @@ h1 {
 
     .calc-display {
         width: 210px;
-        font-size: clamp(18px, 1.18rem + 0.2vw, 20px);
+        font-size: clamp(18px, 1.14rem + 0.2vw, 20px);
     }
 
     .key--zero {
@@ -243,9 +243,9 @@ h1 {
     content: "";
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 11px;
     transform: translateY(-50%);
-    width: 2px;
+    width: 1.7px;
     height: 1.2em;
     background: var(--text-dark);
     animation: cursor-blink .8s steps(2, end) infinite;
