@@ -1,10 +1,10 @@
-// a) CORE MATH FUNCTIONS
+// CORE MATH FUNCTIONS
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
 const divide = (a, b) => (b === 0 ? NaN : a / b); // return NaN, let UI handle message
 
-// b) OPERATE FUNCTION (expects symbols; map if your UI uses names)
+// OPERATE FUNCTION (expects symbols; map if your UI uses names)
 const operate = (operator, a, b) => {
     a = Number(a);
     b = Number(b);
@@ -57,6 +57,7 @@ const inputDigit = (digit) => {
     updateDisplay();
 };
 
+// --- HANDLING OPERATORS ----
 const handleOperator = (nextOperator) => {
     const { firstOperand, displayValue, operator } = calculator;
     const inputValue = parseFloat(displayValue);
@@ -95,8 +96,7 @@ const handleOperator = (nextOperator) => {
 };
 
 
-// g) Preventing more than one input decimal from being inputted
-
+// --- SINGLE DECIMAL ENTRY CHECK ---
 const inputDecimal = (dot) => {
     if (calculator.waitingForSecondOperand) {
         calculator.displayValue = '0.';
@@ -110,9 +110,7 @@ const inputDecimal = (dot) => {
     }
 };
 
-
-// h) backspace button
-
+// --- FUNCTION FOR BACKSPACE USAGE ---
 const backspace = () => {
     if (calculator.displayValue.length === 1 || calculator.displayValue === 'Error') {
         calculator.displayValue = '0';
@@ -121,5 +119,12 @@ const backspace = () => {
     }
 };
 
-// i) keyboard support
+// --- KEYBOARD SUPPORT ---
 
+
+// --- EVENT LISTENERS (for calculator keys) ---
+const keys = document.querySelector('.calc-keys'); // selects calculator keys class
+keys.addEventListener('click', (event) => {
+
+    
+}
