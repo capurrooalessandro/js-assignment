@@ -144,6 +144,7 @@ h1 {
     line-height: 1;
     cursor: pointer;
     transition: background-color .12s ease, border-color .12s ease, transform .06s ease;
+    user-select: none;
 }
 
 .key:hover {
