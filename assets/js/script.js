@@ -122,9 +122,28 @@ const backspace = () => {
 // --- KEYBOARD SUPPORT ---
 
 
-// --- EVENT LISTENERS (for calculator keys) ---
+// --- EVENT LISTENERS (for calculator button clicks) ---
 const keys = document.querySelector('.calc-keys'); // selects calculator keys class
 keys.addEventListener('click', (event) => {
+    const { target } = event; // Destructure target from event object
+    const { action, digit, op } = target.dataset;
 
-    
-}
+    if (!target.matches('button')) {
+        return; // Exit if the click was not on a button
+    }
+
+    // Check for data-digit, data-op, or data-action attributes
+    if (digit) {
+        inputDigit(digit); // This function now calls updateDisplay
+        return;
+    }
+
+    if (op) {
+        const operatorSymbols = { add: '+', subtract: '-', multiply: '*', divide: '/' };
+        handleOperator(operatorSymbols[op]);
+        updateDisplay(); // handleOperator does not update display directly
+        return;
+    }
+
+
+});
