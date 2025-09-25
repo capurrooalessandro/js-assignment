@@ -75,8 +75,14 @@ const handleOperator = (nextOperator) => {
     } else if (operator) {
         // If there's already an operator, we should calculate.
         const result = operate(operator, firstOperand, inputValue);
-        
 
+        // Handle division by zero
+        if (isNaN(result)) {
+            calculator.displayValue = "Error";
+            // We'll reset after a short delay to show the message
+            setTimeout(() => resetCalculator(), 1000);
+            return;
+        }
 
         // Round long decimals to 7 places.
         const roundedResult = parseFloat(result.toFixed(7)); // need to confirm decimal places
