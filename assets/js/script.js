@@ -145,5 +145,29 @@ keys.addEventListener('click', (event) => {
         return;
     }
 
+    if (action) {
+        switch (action) {
+            case 'decimal':
+                inputDecimal('.'); 
+                break;
+            case 'clear':
+                resetCalculator(); 
+                break;
+            case 'backspace':
+                backspace();
+                updateDisplay(); 
+                break;
+            case 'equals':
+                 // When equals is pressed, perform the final calculation.
+                if (calculator.operator && !calculator.waitingForSecondOperand) {
+                    handleOperator(calculator.operator); // Temporarily run handleOperator to do the math
+                    calculator.waitingForSecondOperand = false; // Reset these after calculation
+                    calculator.operator = null;
+                    updateDisplay(); // Update the display with the final result
+                }
+                break;
+        }
+        return;
+    }
 
 });
