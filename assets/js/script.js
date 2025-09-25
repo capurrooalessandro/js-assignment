@@ -119,9 +119,6 @@ const backspace = () => {
     }
 };
 
-// --- KEYBOARD SUPPORT ---
-
-
 // --- EVENT LISTENERS (for calculator button clicks) ---
 const keys = document.querySelector('.calc-keys'); // selects calculator keys class
 keys.addEventListener('click', (event) => {
@@ -170,4 +167,32 @@ keys.addEventListener('click', (event) => {
         return;
     }
 
+});
+
+// --- KEYBOARD SUPPORT ---
+window.addEventListener('keydown', (event) => {
+    const key = event.key;
+    let button;
+
+    // Find button based on the key pressed
+    if (key >= 0 && key <= 9) {
+        button = document.querySelector(`button[data-digit="${key}"]`);
+    } else if (key === '.') {
+        button = document.querySelector(`button[data-action="decimal"]`);
+    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+        const opMap = { '+': 'add', '-': 'subtract', '*': 'multiply', '/': 'divide' };
+        const opName = key;
+        button = document.querySelector(`button[data-op="${opMap[opName]}"]`);
+    } else if (key === 'Enter' || key === '=') {
+        button = document.querySelector(`button[data-action="equals"]`);
+    } else if (key === 'Backspace') {
+        button = document.querySelector(`button[data-action="backspace"]`);
+    } else if (key === 'Escape') {
+        button = document.querySelector(`button[data-action="clear"]`);
+    }
+    
+    if (button) {
+        event.preventDefault(); // Prevent default browser actions
+        button.click(); // Simulate a click on the corresponding button
+    }
 });
