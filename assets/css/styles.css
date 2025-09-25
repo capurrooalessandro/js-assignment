@@ -102,7 +102,6 @@ h1 {
     width: 240px;
     height: 50px;
     padding: 10px 12px;
-    font-size: clamp(18px, 1.2rem + 0.2vw, 20px);
     background: var(--bg-screen);
     border: 1px solid var(--btn-secondary);
     border-radius: 12px;
@@ -224,7 +223,6 @@ h1 {
 
     .calc-display {
         width: 210px;
-        font-size: clamp(18px, 1.14rem + 0.2vw, 20px);
     }
 
     .key--zero {
