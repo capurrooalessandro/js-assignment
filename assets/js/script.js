@@ -99,17 +99,16 @@ const handleOperator = (nextOperator) => {
 
 const inputDecimal = (dot) => {
     if (calculator.waitingForSecondOperand) {
-       // If we press '.' after an operator, start with "0."
-       calculator.displayValue = '0.';
-       calculator.waitingForSecondOperand = false;
-       return;
-   }
-   // Prevent adding multiple decimal points.
-   if (!calculator.displayValue.includes(dot)) {
-       calculator.displayValue += dot;
-   }
+        calculator.displayValue = '0.';
+        calculator.waitingForSecondOperand = false;
+        updateDisplay();
+        return;
+    }
+    if (!calculator.displayValue.includes(dot)) {
+        calculator.displayValue += dot;
+        updateDisplay();
+    }
 };
-
 
 // h) backspace button
 
