@@ -76,14 +76,8 @@ const handleOperator = (nextOperator) => {
         // If there's already an operator, we should calculate.
         const result = operate(operator, firstOperand, inputValue);
         
-        /*
-        if (result === "Nope.") {
-            calculator.displayValue = "Nope.";
-            // We'll reset after a short delay to show the message
-            setTimeout(() => resetCalculator(), 1000);
-            return;
-        }
-        */
+
+
         // Round long decimals to 7 places.
         const roundedResult = parseFloat(result.toFixed(7)); // need to confirm decimal places
         calculator.displayValue = `${roundedResult}`;
@@ -110,8 +104,16 @@ const inputDecimal = (dot) => {
     }
 };
 
+
 // h) backspace button
 
+const backspace = () => {
+    if (calculator.displayValue.length === 1 || calculator.displayValue === 'Error') {
+        calculator.displayValue = '0';
+    } else {
+        calculator.displayValue = calculator.displayValue.slice(0, -1);
+    }
+};
 
 // i) keyboard support
 
