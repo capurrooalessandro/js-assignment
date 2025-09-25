@@ -31,7 +31,7 @@ const display = document.querySelector('.calc-display');
 const updateDisplay = () => {
     const len = calculator.displayValue.length;
     // simple font shrink threshold – tune as needed
-    display.style.fontSize = len > 9 ? '1rem' : '1.5rem';
+    display.style.fontSize = len > 9 ? '0.8rem' : '1.4rem';
     display.value = calculator.displayValue; // input.value, not textContent
 };
 
