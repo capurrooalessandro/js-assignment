@@ -1,74 +1,23 @@
 // a) CORE MATH FUNCTIONS
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => (b === 0 ? NaN : a / b); // return NaN, let UI handle message
 
-const add = (a, b) => {
-    const result = a + b;
-    console.log(`${a} + ${b} = ${result}`);
-    return result;
-};
-const subtract = (a, b) => {
-    const result = a - b;
-    console.log(`${a} - ${b} = ${result}`);
-    return result;
-};
-const multiply = (a, b) => {
-    const result = a * b;
-    console.log(`${a} * ${b} = ${result}`);
-    return result;
-};
-const divide = (a, b) => {
-    if (b === 0) {
-        
-        console.log(`Attempted to divide by zero: ${a} / ${b}`);
-        return "Division by zero not possible";
-    }
-    const result = a / b;
-    console.log(`${a} / ${b} = ${result}`);
-    return result;
-};
-
-
-// b) OPERATE FUNCTION
-
+// b) OPERATE FUNCTION (expects symbols; map if your UI uses names)
 const operate = (operator, a, b) => {
     a = Number(a);
     b = Number(b);
     switch (operator) {
-        case '+':
-            return add(a, b);
-        case '-':
-            return subtract(a, b);
-        case '*':
-            return multiply(a, b);
-        case '/':
-            return divide(a, b);
-       
+        case '+': return add(a, b);
+        case '-': return subtract(a, b);
+        case '*': return multiply(a, b);
+        case '/': return divide(a, b);
+        default: return NaN;
     }
 };
 
-
-// c) HTML Calculator
-
-
-// d) Populate display
-
-const display = document.querySelector('#display');
-
-const updateDisplay = () => {
-    // Update the display element with the current displayValue.
-    // If the value is too long, we can shrink the font size.
-    if (calculator.displayValue.length > 9) {
-         display.style.fontSize = '2.5rem'; //need to confirm
-    } else {
-         display.style.fontSize = '3rem'; // need to confirm
-    }
-    display.textContent = calculator.displayValue;
-};
-// Initialize display on load
-updateDisplay();
-
-
-// e) Make the calculator work!
-
+// --- STATE FIRST (so updateDisplay can read it) ---
 const calculator = {
     displayValue: '0',
     firstOperand: null,
@@ -76,27 +25,36 @@ const calculator = {
     operator: null
 };
 
-// Resets calculator
+// --- DISPLAY (query the right element; set .value for <input>) ---
+const display = document.querySelector('.calc-display');
+
+const updateDisplay = () => {
+    const len = calculator.displayValue.length;
+    // simple font shrink threshold – tune as needed
+    display.style.fontSize = len > 9 ? '1rem' : '1.5rem';
+    display.value = calculator.displayValue; // input.value, not textContent
+};
+
+// Initialize after everything above exists
+updateDisplay();
+
+// --- RESET ---
 const resetCalculator = () => {
     calculator.displayValue = '0';
     calculator.firstOperand = null;
     calculator.waitingForSecondOperand = false;
     calculator.operator = null;
-    updateDisplay(); // Update display immediately after reset
+    updateDisplay();
 };
 
-
+// --- INPUT DIGITS ---
 const inputDigit = (digit) => {
     const { displayValue, waitingForSecondOperand } = calculator;
-
-    if (waitingForSecondOperand === true) {
-        // If we were waiting for the second number, this digit is the start of it.
-        calculator.displayValue = digit;
-        calculator.waitingForSecondOperand = false;
-    } else {
-        // Otherwise, append the digit. Handle the case where the display is '0'.
-        calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
-    }
+    calculator.displayValue = waitingForSecondOperand
+        ? digit
+        : (displayValue === '0' ? digit : displayValue + digit);
+    calculator.waitingForSecondOperand = false;
+    updateDisplay();
 };
 
 const handleOperator = (nextOperator) => {
