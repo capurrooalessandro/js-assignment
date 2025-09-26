@@ -1,5 +1,3 @@
-document.body.style.zoom = 1.25;  
-
 // CORE MATH FUNCTIONS
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -29,25 +27,24 @@ const calculator = {
 };
 
 // --- DISPLAY (query the right element; set .value for <input>) ---
-const display = document.querySelector('.calc-display');
 
-const historyDisplay = document.querySelector('#history-display'); //selector for history element
+const updateFont = () => {
+    if (window.innerWidth <= 380) {
+        display.style.fontSize = '1.8rem';
+    } else if (window.innerWidth <= 1400) {
+        display.style.fontSize = '2.11rem';
+    } else {
+        display.style.fontSize = '2.5rem';
+    }
+}
+
+const display = document.querySelector('.calc-display');
+const historyDisplay = document.querySelector('.history-display'); //selector for history element
 
 const updateDisplay = () => {
-    const len = calculator.displayValue.length;
     // simple font shrink threshold – tune as needed
-    if (window.innerWidth <= 380) {
-        display.style.fontSize = len > 12 ? '1.26rem' : '1.3rem';
-    } else if (window.innerWidth <= 1400) {
-        display.style.fontSize = len > 14 ? '1.3rem' : '1.5rem';
-    } else {
-        display.style.fontSize = len > 14 ? '1.5rem' : '1.6rem';
-    }
-    if (len >= 16) { //Limits the characters of the calculator to 16
-        display.value = calculator.displayValue.substring(0, 16)
-    } else {
-        display.value = calculator.displayValue; 
-    }
+    updateFont()
+    display.value = calculator.displayValue = calculator.displayValue.substring(0, 14);
 };
 
 // function to update the history view
@@ -55,15 +52,7 @@ const updateHistoryDisplay = () => {
     historyDisplay.textContent = calculator.history;
 }
 
-window.addEventListener("resize", () => {
-    if (window.innerWidth <= 380) {
-        display.style.fontSize = len > 12 ? '1.26rem' : '1.3rem';
-    } else if (window.innerWidth <= 1400) {
-        display.style.fontSize = len > 14 ? '1.3rem' : '1.5rem';
-    } else {
-        display.style.fontSize = len > 14 ? '1.5rem' : '1.6rem';
-    }
-})
+window.addEventListener("resize", updateFont)
 
 // Initialize after everything above exists
 updateDisplay();
@@ -124,7 +113,7 @@ const handleOperator = (nextOperator) => {
         
         // Now, set up for the next operation with the NEW operator
         calculator.operator = nextOperator;
-        calculator.history = `${roundedResult} ${nextOperator}`; // Update history to show intermediate result
+        calculator.history = `${roundedResult}${nextOperator}`; // Update history to show intermediate result
         updateHistoryDisplay();
         updateDisplay();
         return; 
@@ -141,7 +130,7 @@ const handleOperator = (nextOperator) => {
         if (isNaN(result)) {
             calculator.displayValue = "Error";
             
-            calculator.history = ''; // Clear history on error
+            calculator.history =''; // Clear history on error
             updateDisplay();
             // Reset after a short delay to show the message
             setTimeout(() => resetCalculator(), 1000);
@@ -156,7 +145,7 @@ const handleOperator = (nextOperator) => {
 
     // add to history
     if(!calculator.waitingForSecondOperand){
-        calculator.history += ` ${displayValue} ${nextOperator}`;
+        calculator.history += `${displayValue}${nextOperator}`;
         updateHistoryDisplay();
     }
 
@@ -233,7 +222,7 @@ keys.addEventListener('click', (event) => {
                         calculator.displayValue = `${roundedResult}`;
                     }
                 
-                    calculator.history += ` ${displayValue} =`;
+                    calculator.history += `${displayValue}=`;
                     //calculator.history = calculator.displayValue;
                     updateHistoryDisplay();
                     updateDisplay();
