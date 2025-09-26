@@ -106,16 +106,28 @@ const handleOperator = (nextOperator) => {
         calculator.firstOperand = inputValue;
     };
 
-    // Get potentially updated values
 
     // If an operator is pressed and we already have a first operand, calculate the result first.
     // This handles chained operations like 5 + 5 - 2
     if (operator && calculator.waitingForSecondOperand) {
-        // If user changes their mind on the operator
-        calculator.history = calculator.history.slice(0, -2) + ` ${nextOperator}`;
-        updateHistoryDisplay();
+        const result = operate(operator, firstOperand, inputValue); // inputValue is the same as firstOperand here
+
+        if (isNaN(result)) {
+            calculator.displayValue = "Error";
+            setTimeout(() => resetCalculator(), 1000);
+            return;
+        }
+
+        const roundedResult = parseFloat(result.toFixed(7));
+        calculator.displayValue = `${roundedResult}`;
+        calculator.firstOperand = roundedResult;
+        
+        // Now, set up for the next operation with the NEW operator
         calculator.operator = nextOperator;
-        return;
+        calculator.history = `${roundedResult} ${nextOperator}`; // Update history to show intermediate result
+        updateHistoryDisplay();
+        updateDisplay();
+        return; 
     }
     
     if (firstOperand === null && !isNaN(inputValue)) {
@@ -205,33 +217,33 @@ keys.addEventListener('click', (event) => {
             case 'backspace':
                 backspace();
                 break;
-                case 'equals':
-                    // This logic is now handled inside handleOperator when a new number is entered
-                    // We just need to perform the final calculation
-                    if (calculator.operator && !calculator.waitingForSecondOperand) {
-                         const { firstOperand, displayValue, operator } = calculator;
-                         const inputValue = parseFloat(displayValue);
-                         const result = operate(operator, firstOperand, inputValue);
-    
-                         if (isNaN(result)) {
-                             calculator.displayValue = "Error";
-                             setTimeout(() => resetCalculator(), 1000);
-                         } else {
-                             const roundedResult = parseFloat(result.toFixed(7));
-                             calculator.displayValue = `${roundedResult}`;
-                         }
-                        
-                        calculator.history += ` ${displayValue} =`;
-                        //calculator.history = calculator.displayValue;
-                        updateHistoryDisplay();
-                        updateDisplay();
-    
-                         // Reset for next calculation
-                        calculator.firstOperand = parseFloat(calculator.displayValue);
-                        calculator.waitingForSecondOperand = false;
-                        calculator.operator = null;
+            case 'equals':
+                // This logic is now handled inside handleOperator when a new number is entered
+                // We just need to perform the final calculation
+                if (calculator.operator && !calculator.waitingForSecondOperand) {
+                    const { firstOperand, displayValue, operator } = calculator;
+                    const inputValue = parseFloat(displayValue);
+                    const result = operate(operator, firstOperand, inputValue);
+
+                    if (isNaN(result)) {
+                        calculator.displayValue = "Error";
+                        setTimeout(() => resetCalculator(), 1000);
+                    } else {
+                        const roundedResult = parseFloat(result.toFixed(7));
+                        calculator.displayValue = `${roundedResult}`;
                     }
-                    break;
+                
+                    calculator.history += ` ${displayValue} =`;
+                    //calculator.history = calculator.displayValue;
+                    updateHistoryDisplay();
+                    updateDisplay();
+
+                        // Reset for next calculation
+                    calculator.firstOperand = parseFloat(calculator.displayValue);
+                    calculator.waitingForSecondOperand = false;
+                    calculator.operator = null;
+                }
+                break;
         }
     }
 
