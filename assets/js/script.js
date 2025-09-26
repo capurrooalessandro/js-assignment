@@ -27,13 +27,33 @@ const calculator = {
 
 // --- DISPLAY (query the right element; set .value for <input>) ---
 const display = document.querySelector('.calc-display');
+const len = calculator.displayValue.length;
 
 const updateDisplay = () => {
-    const len = calculator.displayValue.length;
     // simple font shrink threshold – tune as needed
-    display.style.fontSize = len > 9 ? '0.8rem' : '1.4rem';
-    display.value = calculator.displayValue; // input.value, not textContent
+    if (window.innerWidth <= 380) {
+        display.style.fontSize = len > 12 ? '1.26rem' : '1.3rem';
+    } else if (window.innerWidth <= 1400) {
+        display.style.fontSize = len > 14 ? '1.3rem' : '1.5rem';
+    } else {
+        display.style.fontSize = len > 14 ? '1.5rem' : '1.6rem';
+    }
+    if (len >= 16) { //Limits the characters of the calculator to 16
+        display.value = calculator.displayValue.substring(0, 16)
+    } else {
+        display.value = calculator.displayValue; 
+    }
 };
+
+window.addEventListener("resize", () => {
+    if (window.innerWidth <= 380) {
+        display.style.fontSize = len > 12 ? '1.26rem' : '1.3rem';
+    } else if (window.innerWidth <= 1400) {
+        display.style.fontSize = len > 14 ? '1.3rem' : '1.5rem';
+    } else {
+        display.style.fontSize = len > 14 ? '1.5rem' : '1.6rem';
+    }
+})
 
 // Initialize after everything above exists
 updateDisplay();
