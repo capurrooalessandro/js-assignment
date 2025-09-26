@@ -25,15 +25,16 @@ const calculator = {
     firstOperand: null,
     waitingForSecondOperand: false,
     operator: null,
-    history: // added property for storing the calculator string
+    history: ''// added property for storing the calculator string
 };
 
 // --- DISPLAY (query the right element; set .value for <input>) ---
 const display = document.querySelector('.calc-display');
-const len = calculator.displayValue.length;
-const historyDisplay = document.querySelector('.history-display'); //selector for history element
+
+const historyDisplay = document.querySelector('#history-display'); //selector for history element
 
 const updateDisplay = () => {
+    const len = calculator.displayValue.length;
     // simple font shrink threshold – tune as needed
     if (window.innerWidth <= 380) {
         display.style.fontSize = len > 12 ? '1.26rem' : '1.3rem';
@@ -104,10 +105,9 @@ const handleOperator = (nextOperator) => {
     // This handles chained operations like 5 + 5 - 2
     if (operator && calculator.waitingForSecondOperand) {
         // If user changes their mind on the operator
-        calculator.operator = nextOperator;
-        // Update the last operator in history
-        calculator.history = calculator.history.slice(0, -2) + `${nextOperator} `;
+        calculator.history = calculator.history.slice(0, -2) + ` ${nextOperator}`;
         updateHistoryDisplay();
+        calculator.operator = nextOperator;
         return;
     }
     
@@ -124,7 +124,6 @@ const handleOperator = (nextOperator) => {
             
             calculator.history = ''; // Clear history on error
             updateDisplay();
-            updateHistoryDisplay();
             // Reset after a short delay to show the message
             setTimeout(() => resetCalculator(), 1000);
             return;
@@ -136,8 +135,15 @@ const handleOperator = (nextOperator) => {
         calculator.firstOperand = roundedResult;
     }
 
+    // add to history
+    if(!calculator.waitingForSecondOperand){
+        calculator.history += ` ${displayValue} ${nextOperator}`;
+        updateHistoryDisplay();
+    }
+
     calculator.waitingForSecondOperand = true;
     calculator.operator = nextOperator;
+    updateDisplay();
 };
 
 
@@ -168,62 +174,57 @@ const backspace = () => {
 // --- EVENT LISTENERS (for calculator button clicks) ---
 const keys = document.querySelector('.calc-keys'); // selects calculator keys class
 keys.addEventListener('click', (event) => {
-    const { target } = event; // Destructure target from event object
+    const { target } = event;
     const { action, digit, op } = target.dataset;
 
     if (!target.matches('button')) {
-        return; // Exit if the click was not on a button
+        return;
     }
 
-    // Check for data-digit, data-op, or data-action attributes
+    const operatorSymbols = { add: '+', subtract: '-', multiply: '*', divide: '÷' };
+
     if (digit) {
-        inputDigit(digit); // This function now calls updateDisplay
-        return;
-    }
-
-    if (op) {
-        const operatorSymbols = { add: '+', subtract: '-', multiply: '*', divide: '/' };
-        
-         // If history is empty and we have a number, start the history
-        if (calculator.history === '' && calculator.displayValue !== '0') {
-            calculator.history = `${calculator.displayValue} ${symbol} `;
-        } else if (!calculator.waitingForSecondOperand) {
-            // Append to existing history
-            calculator.history += `${calculator.displayValue} ${symbol} `;
-        }
-
+        inputDigit(digit);
+    } else if (op) {
         handleOperator(operatorSymbols[op]);
-        updateDisplay(); // handleOperator does not update display directly
-        updateHistoryDisplay();
-        return;
-    }
-
-    if (action) {
+    } else if (action) {
         switch (action) {
             case 'decimal':
-                inputDecimal('.'); 
+                inputDecimal('.');
                 break;
             case 'clear':
-                resetCalculator(); 
+                resetCalculator();
                 break;
             case 'backspace':
                 backspace();
-                updateDisplay(); 
                 break;
-            case 'equals':
-                 // When equals is pressed, perform the final calculation.
-                if (calculator.operator && !calculator.waitingForSecondOperand) {
-                    const lastNumber = calculator.displayValue;
-                    handleOperator(calculator.operator); // Temporarily run handleOperator to do the math
-                    calculator.history += `${lastNumber} =`; // Finalize history string
-                    calculator.waitingForSecondOperand = false; // Reset these after calculation
-                    calculator.operator = null;
-                    updateDisplay(); // Update the display with the final result
-                    updateHistoryDisplay();
-                }
-                break;
+                case 'equals':
+                    // This logic is now handled inside handleOperator when a new number is entered
+                    // We just need to perform the final calculation
+                    if (calculator.operator && !calculator.waitingForSecondOperand) {
+                         const { firstOperand, displayValue, operator } = calculator;
+                         const inputValue = parseFloat(displayValue);
+                         const result = operate(operator, firstOperand, inputValue);
+    
+                         if (isNaN(result)) {
+                             calculator.displayValue = "Error";
+                             setTimeout(() => resetCalculator(), 1000);
+                         } else {
+                             const roundedResult = parseFloat(result.toFixed(7));
+                             calculator.displayValue = `${roundedResult}`;
+                         }
+                        
+                         calculator.history += ` ${displayValue} =`;
+                         updateHistoryDisplay();
+                         updateDisplay();
+    
+                         // Reset for next calculation
+                         calculator.firstOperand = parseFloat(calculator.displayValue);
+                         calculator.waitingForSecondOperand = false;
+                         calculator.operator = null;
+                    }
+                    break;
         }
-        return;
     }
 
 });
@@ -232,6 +233,7 @@ keys.addEventListener('click', (event) => {
 window.addEventListener('keydown', (event) => {
     const key = event.key;
     let button;
+    event.preventDefault(); // Prevent default browser actions
 
     // Find button based on the key pressed
     if (key >= 0 && key <= 9) {
@@ -250,7 +252,6 @@ window.addEventListener('keydown', (event) => {
     }
     
     if (button) {
-        event.preventDefault(); // Prevent default browser actions
         button.click(); // Simulate a click on the corresponding button
     }
 });
