@@ -25,10 +25,9 @@
 }
 
 /* Tiny screens hard cap to avoid overflow */
-@media (max-width: 270px) {
-    html {
-        max-width: 270px;
-        min-width: 260px;
+@media (max-width: 320px) {
+    html, .container {
+        min-width: 250px;
         resize: none;
     }
 }
