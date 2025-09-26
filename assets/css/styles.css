@@ -88,9 +88,9 @@ h1 {
 
 /* Calculator shell */
 .container {
-    width: min(90vw, 18rem);
+    width: min(120vw, 22rem);
     margin-inline: auto;
-    padding: 16px 16px 24px;
+    padding: 20px 20px 28px;
     border: 3px solid var(--btn-secondary);
     background: var(--bg-secondary-400);
     border-radius: 14px;
@@ -99,8 +99,8 @@ h1 {
 /* Display (use with <input type="text" readonly> or <output>) */
 .calc-display {
     display: block;
-    width: 240px;
-    height: 50px;
+    width: 280px;
+    height: 54px;
     padding: 10px 12px;
     background: var(--bg-screen);
     border: 1px solid var(--btn-secondary);
@@ -133,13 +133,14 @@ h1 {
 
 /* Buttons */
 .key {
-    padding: 14px;
+    padding: 17px;
     border-radius: 8px;
     border: 1px solid var(--btn-primary);
     color: var(--text-light);
     background: var(--btn-primary);
-    font-size: 20px;
-    width: 50px;
+    font-size: 22px;
+    width: 54px;
+    height: auto;
     line-height: 1;
     cursor: pointer;
     transition: background-color .12s ease, border-color .12s ease, transform .06s ease;
@@ -201,11 +202,37 @@ h1 {
 
 /* 0 spans two slots: (2 * 50px buttons) + one 6px gap */
 .key--zero {
-    width: calc(50px * 2 + 6px);
+    width: calc(52px * 2 + 10px);
 }
 
 .key--func[data-action="clear"], .key--func[data-action="backspace"] {
-    width: calc(35px * 2 + 8px);
+    width: calc(40px * 2 + 4px);
+}
+
+@media (max-width: 1400px) {
+    .container {
+        width: min(90vw, 18rem);
+        padding: 16px 16px 24px;
+    }
+
+    .key {
+        width: 50px;
+        font-size: 20px;
+        padding: 14px;
+    }
+
+    .calc-display {
+        width: 240px;
+        height: 50px;
+    }
+
+    .key--zero {
+        width: calc(50px * 2 + 6px);
+    }
+
+    .key--func[data-action="clear"], .key--func[data-action="backspace"] {
+        width: calc(35px * 2 + 8px);
+    }
 }
 
 /* Tiny devices: keep everything usable */
