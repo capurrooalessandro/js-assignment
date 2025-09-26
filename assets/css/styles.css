@@ -6,9 +6,6 @@
     font-style: normal;
 }
 
-/* =========================
-   Design tokens (colors)
-   ========================= */
 :root {
     --bg-body: #fcfcfc;
     --text-light: #F9FAF8;
@@ -32,7 +29,6 @@
     --keyboard-navigation: #777cff;
 }
 
-/* Tiny screens hard cap to avoid overflow */
 @media (max-width: 320px) {
     html, .container {
         min-width: 250px;
@@ -40,9 +36,6 @@
     }
 }
 
-/* =========================
-   Base & utilities
-   ========================= */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -71,7 +64,6 @@ h1 {
     font-size: clamp(20px, 2vw + 1rem, 32px);
 }
 
-/* Screen-reader only helper */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -84,16 +76,12 @@ h1 {
     border: 0;
 }
 
-/* =========================
-   Calculator layout
-   ========================= */
 .calculator-inner {
     min-height: 91.8vh;
     display: flex;
     align-items: center;
 }
 
-/* Calculator shell */
 .container {
     width: min(120vw, 22rem);
     margin-inline: auto;
@@ -103,7 +91,6 @@ h1 {
     border-radius: 14px;
 }
 
-/* Display (use with <input type="text" readonly> or <output>) */
 .calc-display {
     display: block;
     width: 280px;
@@ -113,7 +100,6 @@ h1 {
     border: 1px solid var(--btn-secondary);
     border-radius: 12px;
     text-align: end;
-    /* remove number spinners if someone keeps type="number" */
     appearance: textfield;
     caret-color: transparent;
     font-family: Digital-7;
@@ -124,7 +110,6 @@ h1 {
     outline-offset: 2px;
 }
 
-/* Keys stack: rows */
 .calc-keys {
     display: flex;
     flex-direction: column;
@@ -133,13 +118,11 @@ h1 {
     align-items: center;
 }
 
-/* A single row of keys */
 .calc-grid {
     display: flex;
     gap: 6px;
 }
 
-/* Buttons */
 .key {
     padding: 17px;
     border-radius: 8px;
@@ -171,12 +154,10 @@ h1 {
     outline-offset: 2px;
 }
 
-/* Functional & operator variants */
 .key--op, .key--func {
     color: var(--text-light);
 }
 
-/* AC (danger) */
 .key--func[data-action="clear"] {
     background: var(--btn-danger);
     border-color: var(--btn-danger);
@@ -192,7 +173,6 @@ h1 {
     border-color: var(--btn-danger-active);
 }
 
-/* Backspace & Equals (secondary) */
 .key--func[data-action="backspace"], .key--equals[data-action="equals"] {
     background: var(--btn-secondary);
     border-color: var(--btn-secondary);
@@ -208,7 +188,6 @@ h1 {
     border-color: var(--btn-secondary-active);
 }
 
-/* 0 spans two slots: (2 * 50px buttons) + one 6px gap */
 .key--zero {
     width: calc(52px * 2 + 10px);
 }
@@ -263,7 +242,6 @@ h1 {
     }
 }
 
-/* Tiny devices: keep everything usable */
 @media (max-width: 380px) {
     .container {
         width: min(94vw, 16rem);
