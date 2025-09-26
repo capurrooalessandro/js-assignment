@@ -1,3 +1,5 @@
+document.body.style.zoom = 1.25;  
+
 // CORE MATH FUNCTIONS
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
