@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Digital-7';
+    src: url('../fonts/digital-7/digital-7.woff2') format('woff2'),
+        url('../fonts/digital-7/digital-7.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* =========================
    Design tokens (colors)
    ========================= */
@@ -99,8 +107,8 @@ h1 {
 .calc-display {
     display: block;
     width: 280px;
-    height: 54px;
-    padding: 10px 12px;
+    height: 82px;
+    padding: 14px 12px 10px 12px;
     background: var(--bg-screen);
     border: 1px solid var(--btn-secondary);
     border-radius: 12px;
@@ -108,6 +116,7 @@ h1 {
     /* remove number spinners if someone keeps type="number" */
     appearance: textfield;
     caret-color: transparent;
+    font-family: Digital-7;
 }
 
 .calc-display:focus-visible {
@@ -208,6 +217,23 @@ h1 {
     width: calc(40px * 2 + 4px);
 }
 
+.display-wrap {
+    position: relative;
+}
+
+.display-wrap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 11px;
+    transform: translateY(-50%);
+    width: 1.7px;
+    height: 40px;
+    background: var(--text-dark);
+    animation: cursor-blink .8s steps(2, end) infinite;
+    pointer-events: none;
+}
+
 @media (max-width: 1400px) {
     .container {
         width: min(90vw, 18rem);
@@ -220,9 +246,12 @@ h1 {
         padding: 14px;
     }
 
+    .display-wrap::after{
+        height: 30px;
+    }
+
     .calc-display {
         width: 240px;
-        height: 50px;
     }
 
     .key--zero {
@@ -260,21 +289,17 @@ h1 {
     }
 }
 
-.display-wrap {
-    position: relative;
-}
-
-.display-wrap::after {
-    content: "";
+.history-display {
     position: absolute;
-    top: 50%;
-    right: 11px;
-    transform: translateY(-50%);
-    width: 1.7px;
-    height: 1.2em;
-    background: var(--text-dark);
-    animation: cursor-blink .8s steps(2, end) infinite;
+    font-size: 1.45rem;
+    bottom: 56%;
+    width: 76%;
+    transform: translateX(12px);
     pointer-events: none;
+    font-family: Digital-7;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 @keyframes cursor-blink {
