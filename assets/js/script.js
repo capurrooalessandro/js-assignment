@@ -98,8 +98,15 @@ const inputDigit = (digit) => {
 
 // --- HANDLING OPERATORS ----
 const handleOperator = (nextOperator) => {
+    
     const { firstOperand, displayValue, operator } = calculator;
     const inputValue = parseFloat(displayValue);
+
+    if (calculator.operator === null && calculator.firstOperand !== null) {
+        calculator.firstOperand = inputValue;
+    };
+
+    // Get potentially updated values
 
     // If an operator is pressed and we already have a first operand, calculate the result first.
     // This handles chained operations like 5 + 5 - 2
@@ -214,14 +221,15 @@ keys.addEventListener('click', (event) => {
                              calculator.displayValue = `${roundedResult}`;
                          }
                         
-                         calculator.history += ` ${displayValue} =`;
-                         updateHistoryDisplay();
-                         updateDisplay();
+                        calculator.history += ` ${displayValue} =`;
+                        //calculator.history = calculator.displayValue;
+                        updateHistoryDisplay();
+                        updateDisplay();
     
                          // Reset for next calculation
-                         calculator.firstOperand = parseFloat(calculator.displayValue);
-                         calculator.waitingForSecondOperand = false;
-                         calculator.operator = null;
+                        calculator.firstOperand = parseFloat(calculator.displayValue);
+                        calculator.waitingForSecondOperand = false;
+                        calculator.operator = null;
                     }
                     break;
         }
