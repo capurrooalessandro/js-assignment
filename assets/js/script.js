@@ -14,7 +14,7 @@ const operate = (operator, a, b) => {
         case '+': return add(a, b);
         case '-': return subtract(a, b);
         case '*': return multiply(a, b);
-        case '/': return divide(a, b);
+        case '÷': return divide(a, b);
         default: return NaN;
     }
 };
@@ -253,7 +253,7 @@ keys.addEventListener('click', (event) => {
 window.addEventListener('keydown', (event) => {
     const key = event.key;
     let button;
-    event.preventDefault(); // Prevent default browser actions
+    //event.preventDefault(); // Prevent default browser actions
 
     // Find button based on the key pressed
     if (key >= 0 && key <= 9) {
@@ -272,6 +272,7 @@ window.addEventListener('keydown', (event) => {
     }
     
     if (button) {
+        event.preventDefault();
         button.click(); // Simulate a click on the corresponding button
     }
 });
