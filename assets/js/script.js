@@ -87,70 +87,41 @@ const inputDigit = (digit) => {
 
 // --- HANDLING OPERATORS ----
 const handleOperator = (nextOperator) => {
-    
-    const { firstOperand, displayValue, operator } = calculator;
-    const inputValue = parseFloat(displayValue);
-
-    if (calculator.operator === null && calculator.firstOperand !== null) {
-        calculator.firstOperand = inputValue;
-    };
-
+    const inputValue = parseFloat(calculator.displayValue);
 
     // If an operator is pressed and we already have a first operand, calculate the result first.
     // This handles chained operations like 5 + 5 - 2
-    if (operator && calculator.waitingForSecondOperand) {
-        const result = operate(operator, firstOperand, inputValue); // inputValue is the same as firstOperand here
-
-        if (isNaN(result)) {
-            calculator.displayValue = "Error";
-            setTimeout(() => resetCalculator(), 1000);
-            return;
-        }
-
-        calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
-        calculator.firstOperand = parseFloat(calculator.displayValue);
-        
-        // Now, set up for the next operation with the NEW operator
+    if (calculator.operator && calculator.waitingForSecondOperand) {
         calculator.operator = nextOperator;
-        calculator.history = `${calculator.displayValue} ${nextOperator}`; // Update history to show intermediate result
+        
+        calculator.history = `${calculator.firstOperand}${nextOperator}`;
         updateHistoryDisplay();
-        updateDisplay();
         return; 
     }
-    
-    if (firstOperand === null && !isNaN(inputValue)) {
-        // If it's the first number, store it as the first operand.
-        calculator.firstOperand = inputValue;
-    } else if (operator) {
-        // If there's already an operator, we should calculate.
-        const result = operate(operator, firstOperand, inputValue);
 
-        // Handle division by zero
+  
+    if (calculator.operator === null) {
+        calculator.firstOperand = inputValue;
+    } 
+  
+    else {
+        const result = operate(calculator.operator, calculator.firstOperand, inputValue);
         if (isNaN(result)) {
             calculator.displayValue = "Error";
-            
-            calculator.history =''; // Clear history on error
-            updateDisplay();
-            // Reset after a short delay to show the message
             setTimeout(() => resetCalculator(), 1000);
+            updateDisplay();
             return;
         }
-
-        // Round long decimals to 7 places.
-        const roundedResult = parseFloat(result.toFixed(7)); // need to confirm decimal places
+        const roundedResult = parseFloat(result.toFixed(7));
         calculator.displayValue = `${roundedResult}`;
         calculator.firstOperand = roundedResult;
     }
 
-    // add to history
-    if(!calculator.waitingForSecondOperand){
-        calculator.history += `${displayValue}${nextOperator}`;
-        updateHistoryDisplay();
-    }
-
+  
     calculator.waitingForSecondOperand = true;
     calculator.operator = nextOperator;
-    updateDisplay();
+    calculator.history = `${calculator.firstOperand}${nextOperator}`;
+    updateHistoryDisplay();
 };
 
 
