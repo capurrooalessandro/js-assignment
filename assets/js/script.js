@@ -63,14 +63,17 @@ const resetCalculator = () => {
 const inputDigit = (digit) => {
     const { displayValue, waitingForSecondOperand } = calculator;
 
-    if (calculator.firstOperand !== null && calculator.waitingForSecondOperand === false && calculator.operator === null) {
+    if (calculator.operator === null && calculator.firstOperand !== null && !waitingForSecondOperand) {
         calculator.history = '';
+        updateHistoryDisplay();
     }
-
-    calculator.displayValue = waitingForSecondOperand
-        ? digit
-        : (displayValue === '0' ? digit : displayValue + digit);
-    calculator.waitingForSecondOperand = false;
+    
+    if (waitingForSecondOperand === true) {
+        calculator.displayValue = digit;
+        calculator.waitingForSecondOperand = false;
+    } else {
+        calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
+    }
     updateDisplay();
 };
 
@@ -79,30 +82,30 @@ const handleOperator = (nextOperator) => {
     const { firstOperand, displayValue, operator } = calculator;
     const inputValue = parseFloat(displayValue);
 
-    if (calculator.operator === null && calculator.firstOperand !== null) {
-        calculator.firstOperand = inputValue;
-    };
-
+   
     if (operator && calculator.waitingForSecondOperand) {
-        const result = operate(operator, firstOperand, inputValue);
+        // Calculate using the first number for both parts (e.g., 9 + 9)
+        const result = operate(operator, firstOperand, firstOperand);
 
         if (isNaN(result)) {
             calculator.displayValue = "Error";
             setTimeout(() => resetCalculator(), 1000);
+            updateDisplay();
             return;
         }
-
+        
         const roundedResult = parseFloat(result.toFixed(7));
         calculator.displayValue = `${roundedResult}`;
         calculator.firstOperand = roundedResult;
-
+        
+        // Set up for the next operation
         calculator.operator = nextOperator;
+        
         calculator.history = `${roundedResult}${nextOperator}`;
         updateHistoryDisplay();
         updateDisplay();
-        return; 
+        return;
     }
-    
     if (firstOperand === null && !isNaN(inputValue)) {
         calculator.firstOperand = inputValue;
     } else if (operator) {
@@ -122,14 +125,10 @@ const handleOperator = (nextOperator) => {
         calculator.firstOperand = roundedResult;
     }
 
-    if(!calculator.waitingForSecondOperand){
-        calculator.history += `${displayValue}${nextOperator}`;
-        updateHistoryDisplay();
-    }
-
     calculator.waitingForSecondOperand = true;
     calculator.operator = nextOperator;
-    updateDisplay();
+    calculator.history = `${calculator.firstOperand}${nextOperator}`;
+    updateHistoryDisplay();
 };
 
 const inputDecimal = (dot) => {
