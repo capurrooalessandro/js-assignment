@@ -78,53 +78,36 @@ const inputDigit = (digit) => {
 };
 
 const handleOperator = (nextOperator) => {
-    
-    const { firstOperand, displayValue, operator } = calculator;
-    const inputValue = parseFloat(displayValue);
+    const inputValue = parseFloat(calculator.displayValue);
 
-   
-    if (operator && calculator.waitingForSecondOperand) {
-        // Calculate using the first number for both parts (e.g., 9 + 9)
-        const result = operate(operator, firstOperand, firstOperand);
 
-        if (isNaN(result)) {
-            calculator.displayValue = "Error";
-            setTimeout(() => resetCalculator(), 1000);
-            updateDisplay();
-            return;
-        }
-        
-        const roundedResult = parseFloat(result.toFixed(7));
-        calculator.displayValue = `${roundedResult}`;
-        calculator.firstOperand = roundedResult;
-        
-        // Set up for the next operation
+    if (calculator.operator && calculator.waitingForSecondOperand) {
         calculator.operator = nextOperator;
         
-        calculator.history = `${roundedResult}${nextOperator}`;
+        calculator.history = `${calculator.firstOperand}${nextOperator}`;
         updateHistoryDisplay();
-        updateDisplay();
-        return;
+        return; 
     }
-    if (firstOperand === null && !isNaN(inputValue)) {
-        calculator.firstOperand = inputValue;
-    } else if (operator) {
-        const result = operate(operator, firstOperand, inputValue);
 
+  
+    if (calculator.operator === null) {
+        calculator.firstOperand = inputValue;
+    } 
+  
+    else {
+        const result = operate(calculator.operator, calculator.firstOperand, inputValue);
         if (isNaN(result)) {
             calculator.displayValue = "Error";
-            
-            calculator.history ='';
-            updateDisplay();
             setTimeout(() => resetCalculator(), 1000);
+            updateDisplay();
             return;
         }
-
         const roundedResult = parseFloat(result.toFixed(7));
         calculator.displayValue = `${roundedResult}`;
         calculator.firstOperand = roundedResult;
     }
 
+  
     calculator.waitingForSecondOperand = true;
     calculator.operator = nextOperator;
     calculator.history = `${calculator.firstOperand}${nextOperator}`;
