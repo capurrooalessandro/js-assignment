@@ -107,13 +107,12 @@ const handleOperator = (nextOperator) => {
             return;
         }
 
-        const roundedResult = parseFloat(result.toFixed(7));
-        calculator.displayValue = `${roundedResult}`;
-        calculator.firstOperand = roundedResult;
+        calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
+        calculator.firstOperand = parseFloat(calculator.displayValue);
         
         // Now, set up for the next operation with the NEW operator
         calculator.operator = nextOperator;
-        calculator.history = `${roundedResult}${nextOperator}`; // Update history to show intermediate result
+        calculator.history = `${calculator.displayValue} ${nextOperator}`; // Update history to show intermediate result
         updateHistoryDisplay();
         updateDisplay();
         return; 
